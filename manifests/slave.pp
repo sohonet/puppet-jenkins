@@ -98,9 +98,13 @@ class jenkins::slave (
 
   validate_string($tool_locations)
 
-  $client_jar = "swarm-client-${version}-jar-with-dependencies.jar"
+  if versioncmp($version, '3.0') < 0 {
+    $client_jar = "swarm-client-${version}-jar-with-dependencies.jar"
+  } else {
+    $client_jar = "swarm-client-${version}.jar"
+  }
   $client_url = $source ? {
-    undef   => "http://maven.jenkins-ci.org/content/repositories/releases/org/jenkins-ci/plugins/swarm-client/${version}/",
+    undef   => "https://repo.jenkins-ci.org/releases/org/jenkins-ci/plugins/swarm-client/${version}/",
     default => $source,
   }
   $quoted_ui_user = shellquote($ui_user)
